@@ -1,27 +1,60 @@
 import logo from "../assets/Logo.png";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useContext, useState } from "react";
+import AuthContext from "../Contexts/AuthContext";
+import UserContext from "../Contexts/UserContext";
 
 export default function LoginPage() {
-  function LogIn() {}
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const navigate = useNavigate()
+  const { setToken } = useContext(AuthContext)
+  const { setUser } = useContext(UserContext)
+  function SignIn(e) {
+    e.preventDefault()
+    const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login"
+    const body = { email, password }
+    axios.post(URL, body).then((res) => {
+      setUser({ name: res.data.name, image: res.data.image })
+      setToken(res.data.token)
+      navigate("/habitos")
+    })
+    .catch(err => alert(err.response.data.message))
+  }
   return (
     <ContainerLogin>
       <ContainerImage>
-        <img src={logo} />
+        <img src={logo} alt="logo" />
       </ContainerImage>
-      <form onSubmit={LogIn}>
+      <form onSubmit={SignIn}>
         <InputGroup>
           <Title htmlFor="email"></Title>
-          <input id="email" type="email" placeholder="email" />
+          <input
+            id="email"
+            type="email"
+            placeholder="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
 
           <Title htmlFor="password"></Title>
-          <input id="password" type="password" placeholder="senha" required />
+          <input
+            id="password"
+            type="password"
+            placeholder="senha"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
 
           <Enter>Entrar</Enter>
         </InputGroup>
       </form>
       <Link to="/cadastro">
-          <p>Não tem uma conta? Cadastre-se!</p>
+        <p>Não tem uma conta? Cadastre-se!</p>
       </Link>
     </ContainerLogin>
   );
@@ -34,7 +67,6 @@ const ContainerLogin = styled.div`
     align-items: center;
     p {
         margin-top:-120px;
-        color:#52B6FF;
         font-size: 14px;
         font-weight: 400;
 ;
@@ -77,6 +109,7 @@ const Enter = styled.button`
   height: 45px;
   margin-bottom: 140px;
   background-color: #52B6FF;
+  color: white;
   border-radius: 4px;
   border: 1px solid #52B6FF;
   text-align: center;

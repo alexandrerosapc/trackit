@@ -55,6 +55,9 @@ const GlobalStyle = createGlobalStyle`
     body {
     font-family: 'Arvo', serif;
     }
+    a {
+        color: #52B6FF;
+    }
 `
 
 export default GlobalStyle

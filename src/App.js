@@ -4,19 +4,28 @@ import Historic from "./Components/Historic"
 import LoginPage from "./Components/LoginPage"
 import SignUpPage from "./Components/SignUpPage"
 import Today from "./Components/Today"
+import { useState } from "react";
+import AuthContext from "./Contexts/AuthContext";
+import UserContext from "./Contexts/UserContext";
 
 
 function App() {
+  const [token, setToken] = useState("")
+  const [user, setUser] = useState({})
   return (
-    <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<LoginPage></LoginPage>}/>
-      <Route path="/cadastro" element={<SignUpPage></SignUpPage>}/>
-      <Route path="/habitos" element={<Habits></Habits>}/>
-      <Route path="/hoje" element={<Today></Today>}/>
-      <Route path="/historico" element={<Historic></Historic>}/>
-    </Routes>
-    </BrowserRouter>
+    <AuthContext.Provider value={{token, setToken}} >
+      <UserContext.Provider value={{user, setUser}}>
+        <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginPage/>}/>
+          <Route path="/cadastro" element={<SignUpPage/>}/>
+          <Route path="/habitos" element={<Habits/>}/>
+          <Route path="/hoje" element={<Today/>}/>
+          <Route path="/historico" element={<Historic/>}/>
+        </Routes>
+        </BrowserRouter>
+      </UserContext.Provider>
+    </AuthContext.Provider>
   );
 }
 
